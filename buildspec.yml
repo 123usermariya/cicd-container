@@ -3,14 +3,15 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - $(aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 213743882223.dkr.ecr.ap-south-1.amazonaws.com)
+      - $(aws ecr get-login-password --region ap-south-1 --no-include-email)
+      - REPOSITORY_URI={213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images}
   build:
     commands:
-      - docker build -t my-images:latest .
-      - docker tag my-images:latest 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest
+      - docker build -t 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest .
+      - docker tag 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest
   post_build:
     commands:
       - docker push 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest
-      - printf '[{"name":MoneyAI-Dev-Task,"imageUri":"%s"}]' 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest > imagedefinitions.json
+      - printf '[{"name":MoneyAI_Dev_Cluster,"imageUri":"%s"}]' 213743882223.dkr.ecr.ap-south-1.amazonaws.com/my-images:latest > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
